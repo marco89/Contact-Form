@@ -101,7 +101,6 @@
 
                     // column with a : before indiciate a named placeholder
                     $statement->execute([':customerName' => $nameToInsert]);
-
                 } catch (\Exception $Exception) {
                     echo $Exception->getMessage();
                 }
@@ -111,26 +110,9 @@
                 <div class="col-md-6 text-left">
                     <button class="btn btn-success" type="submit" id="submit-btn">Resubmit Form</button>
                 </div>
-                <div class="col-md-6 text-right">
-                    <button type="button" class="btn btn-primary" id="db-btn">Save to database</button>
-                </div>
-
             </div>
         </div>
     </form>
-
-
-
 </body>
-
-<script>
-    $(document).on("click", "#db-btn", function() {
-        $("button").each(function() {
-            $(this).prop("disabled", false)
-        })
-    })
-</script>
-
-
 
 </html>

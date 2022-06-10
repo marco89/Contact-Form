@@ -27,7 +27,7 @@
     ?>
 
     <form action="index.php" method="POST" enctype="multipart/form-data" class="container">
-        <div class="bg-info">
+        <div class="container-fluid w-50 h-75 p-2 bg-info mt-2 rounded text-white">
             <div class="row bg-info p-5">
 
                 <?php
@@ -36,26 +36,29 @@
                     $data_source = "mysql:host=$server;dbname=$database;charset=$charset";
                     $pdo = new PDO($data_source, $username, $password);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    echo "connection successful";
-                    //return $pdo;
+
+
+                    echo "Connection to DB successful";
+
 
                     if (empty($_POST['user-name']) || is_numeric($_POST['user-name'])) {
-                        throw new \Exception('Please enter a valid name.');
+                        throw new \Exception('Error: Please enter a valid name.');
                     }
                     if (empty($_POST['user-email']) || (!filter_var($_POST['user-email'], FILTER_VALIDATE_EMAIL))) {
-                        throw new \Exception('Please enter a valid email.');
+                        throw new \Exception('Error: Please enter a valid email.');
                     }
                     if (empty($_POST['dropdown'])) {
-                        throw new \Exception('No issue type selected');
+                        throw new \Exception('Error: No issue type selected');
                     }
-                    if (empty($_POST['text-box'])) {
-                        throw new \Exception('Please provide a short description of the reason for your email.');
+                    if (empty($_POST['notes'])) {
+                        throw new \Exception('Error: Please provide a short description of the reason for your email.');
                     }
+
 
                     $name = htmlspecialchars($_POST['user-name']);
                     $email = htmlspecialchars($_POST['user-email']);
                     $issue = htmlspecialchars($_POST['dropdown']);
-                    $notes = htmlspecialchars(strip_tags($_POST['text-box']));
+                    $notes = htmlspecialchars(strip_tags($_POST['notes']));
 
                 ?>
 
@@ -89,21 +92,28 @@
                         <label>
                             Notes
                         </label>
-                        <input class="form-control" type="text" name="text-box" value="<?= $notes ?>">
+                        <input class="form-control" type="text" id="notes" name="notes" value="<?= $notes ?>">
                     </div>
 
                 <?php
 
-                    $nameToInsert = $_POST['user-name'];
-                    $sql = "INSERT INTO enquiries (customerName) VALUES (:customerName)";
+                    $data = [
+                        'customerName' => $name,
+                        'customerEmail' => $email,
+                        'issueType' => $issue,
+                        'issueNotes' => $notes,
+                    ];
+                    $sql = "INSERT INTO enquiries (customerName, customerEmail, issueType, issueNotes) 
+                            VALUES (:customerName, :customerEmail, :issueType, :issueNotes)";
 
                     $statement = $pdo->prepare($sql);
 
                     // column with a : before indiciate a named placeholder
-                    $statement->execute([':customerName' => $nameToInsert]);
+                    $statement->execute(array(':customerName' => $name, 'customerEmail' => $email, 'issueType' => $issue, 'issueNotes' => $notes));
                 } catch (\Exception $Exception) {
                     echo $Exception->getMessage();
                 }
+
 
                 ?>
 

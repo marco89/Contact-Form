@@ -55,12 +55,12 @@
 
                     <br>
 
-                    <textarea id="text-box" name="text-box" value="<?= $_POST['text-box'] ?? ''; ?>" placeholder="Please provide a short explanation of your query"></textarea>
+                    <textarea id="notes" name="notes" value="<?= $_POST['notes'] ?? ''; ?>" placeholder="Please provide a short explanation of your query"></textarea>
 
                     <div style="width:320px; max-width:320px;">
                         <script>
                             $(document).ready(function() {
-                                $('#text-box').summernote({
+                                $('#notes').summernote({
                                     maxWidth: 160
                                 });
                             });
